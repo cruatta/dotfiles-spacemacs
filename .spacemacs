@@ -41,11 +41,10 @@ values."
      python
      shell-scripts
      rust
-     ivy
+     helm
      auto-completion
      emacs-lisp
      scala
-     ivy
      salt
      git
      markdown
