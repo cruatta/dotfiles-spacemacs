@@ -29,21 +29,24 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
+   ;; ----------------------------------------------------------------
+   ;; Example of useful layers you may want to use right away.
+   ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
+   ;; <M-m f e R> (Emacs style) to install them.
+   ;; ----------------------------------------------------------------
    dotspacemacs-configuration-layers
    '(
      yaml
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
+     docker
      python
      shell-scripts
      rust
      ivy
      auto-completion
-     ;; better-defaults
      emacs-lisp
+     scala
+     ivy
+     salt
      git
      markdown
      org
@@ -53,6 +56,7 @@ values."
      spell-checking
      syntax-checking
      ;; version-control
+     ;; better-defaults
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
