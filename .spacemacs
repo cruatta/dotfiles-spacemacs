@@ -36,6 +36,7 @@ values."
    ;; ----------------------------------------------------------------
    dotspacemacs-configuration-layers
    '(
+     ansible
      yaml
      docker
      python
@@ -316,6 +317,21 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  
+  (global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
+
+  (defun un-indent-by-removing-4-spaces ()
+    "remove 4 spaces from beginning of of line"
+    (interactive)
+    (save-excursion
+      (save-match-data
+        (beginning-of-line)
+        ;; get rid of tabs at beginning of line
+        (when (looking-at "^\\s-+")
+          (untabify (match-beginning 0) (match-end 0)))
+        (when (looking-at "^    ")
+          (replace-match "")))))
+  
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
