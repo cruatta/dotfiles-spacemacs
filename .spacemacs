@@ -36,32 +36,39 @@ values."
    ;; ----------------------------------------------------------------
    dotspacemacs-configuration-layers
    '(
-     yaml
+     lua
+     html
+     typescript
+     ansible
+     ruby
+     javascript
      docker
-     python
      shell-scripts
-     rust
-     helm
-     auto-completion
-     emacs-lisp
+     markdown
+     yaml
+     python
      scala
      salt
+     helm
+     rust
+     auto-completion
+     (syntax-checking :variables syntax-checking-enable-by-default t)
+     emacs-lisp
      git
-     markdown
      org
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom)
-     spell-checking
-     syntax-checking
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
      ;; version-control
      ;; better-defaults
      )
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(mac-pseudo-daemon)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -81,6 +88,14 @@ This function is called at the very startup of Spacemacs initialization
 before layers configuration.
 You should not put any user code in there besides modifying the variable
 values."
+  (setq-default configuration-layer--elpa-archives
+                '(
+                  ("melpa" . "melpa.org/packages/")
+                  ("org"   . "orgmode.org/elpa/")
+                  ("gnu"   . "elpa.gnu.org/packages/")
+                  )
+                )
+
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -133,8 +148,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(solarized-dark
+                         solarized-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -307,7 +322,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
+ )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -316,7 +331,19 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  )
+  (global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
+  (defun un-indent-by-removing-4-spaces ()
+    "remove 4 spaces from beginning of of line"
+    (interactive)
+    (save-excursion
+      (save-match-data
+        (beginning-of-line)
+        ;; get rid of tabs at beginning of line
+        (when (looking-at "^\\s-+")
+          (untabify (match-beginning 0) (match-end 0)))
+        (when (looking-at "^    ")
+          (replace-match "")))))
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -325,9 +352,14 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (spacemacs-light)))
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+ '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (yaml-mode xterm-color shell-pop multi-term flyspell-correct-ivy flyspell-correct eshell-z eshell-prompt-extras esh-help auto-dictionary smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-rust flycheck-pos-tip flycheck evil-magit magit magit-popup git-commit ghub let-alist with-editor company-statistics company-shell company-anaconda company auto-yasnippet yasnippet ac-ispell auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional cython-mode anaconda-mode pythonic insert-shebang fish-mode racer pos-tip cargo toml-mode rust-mode ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link which-key undo-tree org-plus-contrib ivy hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (solarized-theme web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data tide typescript-mode jinja2-mode company-ansible ansible-doc ansible rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby helm-ag-r wgrep smex ivy-hydra counsel-projectile counsel swiper ivy dockerfile-mode docker tablist docker-tramp org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot let-alist toml-mode racer flycheck-rust cargo rust-mode smeargle orgit magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flycheck-pos-tip pos-tip evil-magit magit magit-popup git-commit ghub with-editor company-tern company-shell company-anaconda auto-yasnippet ac-ispell auto-complete flycheck company-statistics tern salt-mode mmm-jinja2 web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc coffee-mode dash-functional diminish bind-key insert-shebang fish-mode mmm-mode markdown-toc markdown-mode gh-md noflet ensime company yasnippet sbt-mode scala-mode mac-pseudo-daemon xpm yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s define-word column-enforce-mode clean-aindent-mode bind-map auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
